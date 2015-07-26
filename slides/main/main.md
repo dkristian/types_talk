@@ -7,8 +7,10 @@ Melbourne Scala User Group
 
 27th July, 2015
 
+
 !SLIDE
-# Pop Quiz: What is tags?
+# Pop Quiz
+### What is tags?
 
 ```ruby
 tags = item.tags
@@ -55,16 +57,22 @@ initials(batman)
 
 !SLIDE
 # What went wrong?
-Made an assumption about names
+### Made an assumption about names
 
 !SLIDE
 # What happens...
 ## ...when you assume?
+
+![types](main/when_you_assume.png)
+
+<!--span class="ref">https://xkcd.com/1339/</span-->
+
+#SUB https://xkcd.com/1339/
+
+!SLIDE
 ![types](main/types.png)
 
-<div class="ref">
-https://twitter.com/KenScambler/status/621933432365432832
-</div>
+<span class="ref">https://twitter.com/KenScambler/status/621933432365432832</span>
 
 !SLIDE
 # Maybe it works?
@@ -152,7 +160,9 @@ So why stop at "primitives" when modeling your types
 
 !SLIDE
 # Boring!
-Strings are trivial; how does this help me in the Real World<span class="sup">TM</span>?
+### Strings are trivial; how does this help me in
+
+## The Real World<span class="sup">TM</span>?
 
 !SLIDE
 # Real World Auth & Auth
@@ -240,9 +250,10 @@ Level of constraints depends on the sophistication of the type system
 You can still rule-out a number of types of bugs and help focus your search when something does go wrong
 
 !SLIDE
+
 # Thanks!
-https://github.com/dkristian/types_profit
-
-http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html
-
-https://github.com/softprops/picture-show
+##
+* https://github.com/dkristian/types_profit
+* http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html
+* https://twitter.com/kdomagala
+* https://github.com/softprops/picture-show

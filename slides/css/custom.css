@@ -4,15 +4,29 @@ body {
     font-weight: normal;
 }
 
+h1 {
+    text-align: center;
+}
+
 h2 {
     padding-top: 0.5em;
 }
 
-ol {
+h3 {
     padding-top: 0.5em;
 }
 
+ol {
+    text-align: left;
+    padding-top: 0.5em;
+}
+
+ul {
+    text-align: left;
+}
+
 pre {
+    text-align: left;
     padding-top: 0.5em;
 }
 
@@ -21,11 +35,23 @@ code {
 }
 
 p {
+    text-align: left;
     padding-top: 1em;
 }
 
-div.ref {
-    padding-top: 1em;
+.content {
+    text-align: left;
+}
+
+.container {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.ref {
     font-size: 0.5em;
 }
 
