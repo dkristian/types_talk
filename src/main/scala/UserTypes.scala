@@ -3,7 +3,7 @@ package userTypes
 // Slide width --------------------------------------------->
 
 case class NonEmptyString private(value: String) {
-  def head = value.head
+  def init = value.head
 }
 
 object NonEmptyString {
@@ -30,7 +30,7 @@ object User {
     } yield User(fn, ln)
 
   def initials(u: User): (Char, Char) =
-    (u.firstName.head, u.lastName.head)
+    (u.firstName.init, u.lastName.init)
 }
 
 object Client {

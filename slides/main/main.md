@@ -1,19 +1,36 @@
 !SLIDE
-# 1. Types 2. ??? 3. Profit!
+## 1. Types 2. ??? 3. Profit!
 
-Kristian Domagala
+#### Kristian Domagala
 
 Melbourne Scala User Group
 
 27th July, 2015
 
+!SLIDE
+# My journey
+## 
+
+* 2000 &nbsp;Graduate Java developer - JSPs, Servlets
+* 2002 &nbsp;EJBs!
+* 2003 &nbsp;Hibernate/Spring
+* 2004 &nbsp;Agile! TDD/BDD!
+* 2007 &nbsp;Still looking for a better way
+* 2008 &nbsp;Ruby on Rails!
+* 2008 &nbsp;Scala (via Haskell)
+* 2009 &nbsp;Java/Objective C
+* 2010 &nbsp;Yeah, no, Scala
 
 !SLIDE
 # Pop Quiz
-### What is tags?
+
+What is tags?
 
 ```ruby
-tags = item.tags
+
+  tags = item.tags
+
+
 ```
 
 1. Collection of `Tag` object?
@@ -24,27 +41,19 @@ tags = item.tags
 # All of the above!
 Dependent on the code path
 
-* From DB -> Tag collection
-* From controller -> String
+* From DB: `Tag` collection
+* From controller: Comma-delimited `String`
+* From some other code-path: collection of `String`s
 
 All paths tested, but tests were setup with path assumptions
 
-<!-- Lucky we are working with a language that has compiler-checked types -->
-
 !SLIDE
 # Let's write some code
 ```scala
-case class User(fName: String, lName: String)
+case class User(firstName: String, lastName: String)
 
-def initials(u: User): (Char,Char) =
-  (u.fName.head, u.lName.head)
-```
-
-!SLIDE
-# Let's write some code
-```scala
 def initials(u: User): (Char, Char) =
-  (u.fName.head, u.lName.head)
+  (u.firstName.head, u.lastName.head)
 
 val bruce = User("Bruce", "Wayne")
 initials(bruce)
@@ -53,6 +62,20 @@ initials(bruce)
 val batman = User("Batman", "")
 initials(batman)
 // ...
+```
+
+!SLIDE
+# Hmmmm
+```scala
+java.util.NoSuchElementException: next on empty iterator
+	at scala.collection.Iterator$$anon$2.next(Iterator.scala:39)
+	at scala.collection.Iterator$$anon$2.next(Iterator.scala:37)
+	at scala.collection.IndexedSeqLike$Elements.next(IndexedSeqLike.scala:64)
+	at scala.collection.IterableLike$class.head(IterableLike.scala:91)
+	at scala.collection.immutable.StringOps.scala$collection$IndexedSeqOptimized$$super$head(StringOps.scala:31)
+	at scala.collection.IndexedSeqOptimized$class.head(IndexedSeqOptimized.scala:120)
+	at scala.collection.immutable.StringOps.head(StringOps.scala:31)
+	at user.User$.initials(User.scala:7)
 ```
 
 !SLIDE
@@ -67,12 +90,7 @@ initials(batman)
 
 <!--span class="ref">https://xkcd.com/1339/</span-->
 
-#SUB https://xkcd.com/1339/
-
-!SLIDE
-![types](main/types.png)
-
-<span class="ref">https://twitter.com/KenScambler/status/621933432365432832</span>
+<span class="ref">https://xkcd.com/1339/</span>
 
 !SLIDE
 # Maybe it works?
@@ -91,14 +109,14 @@ What happens when someone new comes on board and adds a new code path?
 ```scala
 type Name = NonEmptyString
 
-case class User(fName: Name, lName: Name)
+case class User(firstName: Name, lastName: Name)
 ```
 
 !SLIDE
 # NonEmptyString
 ```scala
-case class NonEmptyString private (value: String) {
-  def head = value.head
+case class NonEmptyString private(value: String) {
+  def init = value.head
 }
 
 object NonEmptyString {
@@ -106,7 +124,8 @@ object NonEmptyString {
     if (str.isEmpty) None
     else Some(NonEmptyString(str))
 
-  def nonEmptyString(head: Char, tail: String): NonEmptyString =
+  def nonEmptyString(head: Char,
+                     tail: String): NonEmptyString =
     NonEmptyString(head + tail)
 }
 ```
@@ -115,27 +134,29 @@ object NonEmptyString {
 # Let's try it again
 ```scala
 type Name = NonEmptyString
-case class User(fName: Name, lName: Name)
+case class User(firstName: Name, lastName: Name)
 
 object User {
-  def create(fName: String,lName: String): Option[User] =
+
+  def create(fName: String, lName: String): Option[User] =
     for {fn <- nonEmptyString(fName)
          ln <- nonEmptyString(lName)
-    } yield User(fn,ln) }
+    } yield User(fn, ln)
 
-  def initials(u: User): (Char, Char) = (u.fName.head, u.lName.head)
+  def initials(u: User): (Char, Char) =
+    (u.firstName.init, u.lastName.init)
 }
 ```
 
 !SLIDE
 # Profit!
 ```scala
-val bruce:Option[User] = User.create("Bruce","Wayne")
-// Some(User(...))
+val bruce: Option[User] = User.create("Bruce","Wayne")
+// Some(User(Bruce, Wayne))
 bruce.map(user => initials(user))
 // Some(('B','W'))
 
-val batman:Option[User] = User.create("Batman","")
+val batman: Option[User] = User.create("Batman","")
 // None
 batman.map(user => initials(user))
 // None
@@ -154,9 +175,11 @@ How much extra code really?
 !SLIDE
 # Just an extension
 
-Writing a User class > using an associative array of properties to represent a user
+Writing a `User` class in a typed language is an improvement over using an associative array of properties to represent a `User` in an untyped language
 
 So why stop at "primitives" when modeling your types
+
+<!-- Reference to item.tags example -->
 
 !SLIDE
 # Boring!
@@ -165,83 +188,121 @@ So why stop at "primitives" when modeling your types
 ## The Real World<span class="sup">TM</span>?
 
 !SLIDE
-# Real World Auth & Auth
+# Real World
 ```scala
-trait Task { def id:Id; def noteId:Id; ... }
-trait Note { def id:Id; def content:String; ... }
-object Database {
-  def loadTask(taskId:Id):Option[Task] = {
-    // ensure that user is logged in
-  }
-  def loadNote(noteId:Id):Option[Note] = ...
-  def updateNote(noteId:Id, newContent:String) = {
-    // ensure that user is logged in
-    // make sure note exists
-    // check that note belongs to the logged in user
-  }
+trait Task { def id: Id; def noteId: Id; ... }
+trait Note { def id: Id; def content: String; ... }
+
+class Database(userId: Id) {
+
+  // Need to ensure user is logged in
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Need to ensure user is logged in
+  // Need to ensure note exists and belongs to user
+  def updateNote(noteId: Id, newContent: String) = ...
 }
 ```
 
 !SLIDE
 # Types
 ```scala
+case class User(userId: Id, pwdHash: PasswordHash)
+
 trait PasswordHash {
-  def matches(other:PasswordHash):Boolean
+  def matches(other: PasswordHash): Boolean
 }
 
-trait Password object Password {
-  def hash(pwd:NonEmptyString):PasswordHash = ...
-}
+trait Password { def hash: PasswordHash }
+
 trait SessionToken
 ```
 
 !SLIDE
 # ???
 ```scala
-sealed trait AuthenticatedUser { def user:User } object Authentication {
-  def auth(usr:User, pwd:NonEmptyString): Option[AuthenticatedUser] =
-    if (Password.hash(pwd).matches(usr.pwdHash))
-      Some(new AuthenticatedUser { val user = usr })
+class AuthedUser private(val user: User)
+
+object AuthedUser {
+
+  def auth(usr: User, pwd: Password): Option[AuthedUser] =
+    if (pwd.hash.matches(usr.pwdHash))
+      Some(new AuthedUser(usr))
     else
       None
 
-  def auth(usr:User, tok:SessionToken): Option[AuthenticatedUser] = ...
+  def auth(usr:User, tok: SessionToken): Option[AuthedUser] =
+    ...
 }
 ```
 
 !SLIDE
 # Authentication Profit!
 ```scala
-trait Task { def id:Id; def noteId:Id; ... }
-trait Note { def id:Id; def content:String; ... }
-class Database(au:AuthenticatedUser) {
-  def loadTask(taskId:Id):Option[Task] = {
-    // can't call unless user has been authenticated
-  }
-  def loadNote(noteId:Id):Option[Note] = ...
-  def updateNote(noteId:Id, newContent:String) = {
-    // again, can't call unless user has been authenticated
-    // still need to validate noteId...
-  }
+class Database(au: AuthedUser) {
+
+  // Can't call unless user has been authenticated
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Again, can't call unless user has been authenticated
+  // Still need to check if note exists and is accessible
+  def updateNote(noteId: Id, newContent: String) = ...
 }
 ```
 
 !SLIDE
 # Authorisation Profit!
 ```scala
-sealed trait Ref[A] { def id:Id }
-trait Task extends Ref[Task] { def note:Ref[Note]; ...}
-trait Note extends Ref[Note] { def content:String; ...}
-class Database(au:AuthenticatedUser) {
-  def loadTask(taskId:Id):Option[Task] = ...
-  def loadNote(noteId:Id):Option[Note] = ...
 
-  def updateNote(noteRef:Ref[Note], newContent:String) = {
-    // can only get Ref[Note] from Database, which implies
-    // the referred note belongs to the authenticated user
-  }
+object Database {
+  case class Task private(id: Id, noteId: Id, ...)
+  case class Note private(id: Id, content: String, ...)
+}
+
+class Database(au: AuthedUser) {
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Can only get Note from Database, which implies that:
+  //   1. Note exists
+  //   2. Note is accessible by AuthedUser
+  def updateNote(note: Note, newContent: String) = ...
 }
 ```
+
+!SLIDE
+# Generalisation Profit!
+
+```scala
+sealed trait Ref[A] { def id: Id }
+object Database {
+  case class Task private(id: Id, note: Ref[Note])
+  case class Note private(id: Id, content: String)
+    extends Ref[Note]
+}
+class Database(au: AuthedUser) {
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Can only get Ref[Note] from Database (either from
+  // loadNote or via loadTask)
+  def updateNote(noteRef: Ref[Note], newContent: String) = ...
+}
+```
+
+!SLIDE
+# Types are cheap<span class="sup">*</span>
+###### <span class="sup">*</span>Relative to the benefits they provide
+
+!SLIDE
+# Types are cheap
+>Is there a type famine that I'm not aware of?
+
+Rúnar Bjarnason
+
+<span class="ref">https://groups.google.com/d/msg/scalaz/R-YYRoqzSXk/jk_gCJxMLoIJ</span>
 
 !SLIDE
 # More Profit?
@@ -250,10 +311,15 @@ Level of constraints depends on the sophistication of the type system
 You can still rule-out a number of types of bugs and help focus your search when something does go wrong
 
 !SLIDE
+# Next time you ask...
+![types](main/types.png)
 
+<span class="ref">https://twitter.com/KenScambler/status/621933432365432832</span>
+
+!SLIDE
 # Thanks!
-##
-* https://github.com/dkristian/types_profit
-* http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html
-* https://twitter.com/kdomagala
-* https://github.com/softprops/picture-show
+
+* <span class="ref">https://github.com/dkristian/types_talk</span>
+* <span class="ref">http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html</span>
+* <span class="ref">https://twitter.com/kdomagala</span>
+* <span class="ref">https://github.com/softprops/picture-show</span>
