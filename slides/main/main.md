@@ -319,7 +319,7 @@ You can still rule-out a number of types of bugs and help focus your search when
 !SLIDE
 # Thanks!
 
-* <span class="ref">https://github.com/dkristian/types_talk</span>
+* <span class="ref">http://dkristian.github.io/types_talk</span>
 * <span class="ref">http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html</span>
 * <span class="ref">https://twitter.com/kdomagala</span>
 * <span class="ref">https://github.com/softprops/picture-show</span>
