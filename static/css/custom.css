@@ -1,0 +1,103 @@
+body {
+    font-family: sans-serif;
+    font-size: 2.5em;
+    font-weight: normal;
+}
+
+/* https://css-tricks.com/snippets/css/simple-and-nice-blockquote-styling/ */
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+blockquote p {
+  display: inline;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    padding-top: 0.5em;
+}
+
+h3 {
+    text-align: center;
+    padding-top: 0.5em;
+}
+
+h4 {
+    padding-top: 4em;
+}
+
+h6 {
+    text-align: center;
+    padding-top: 0.3em;
+}
+
+ol {
+    text-align: left;
+    padding-top: 0.5em;
+}
+
+ul {
+    text-align: left;
+    list-style-type: none;
+}
+
+li {
+    padding-top: 0.4em
+}
+
+pre {
+    text-align: left;
+    padding-top: 0.5em;
+}
+
+code {
+    font-size: 0.8em;
+}
+
+p {
+    text-align: left;
+    padding-top: 1em;
+}
+
+.content {
+    text-align: left;
+}
+
+.container {
+}
+
+.center {
+    text-align: center;
+}
+
+.ref {
+    font-size: 0.5em;
+}
+
+div.title {
+    text-align: center;
+}
+
+span.sup {
+    vertical-align: super;
+    font-size: 0.5em;
+}
