@@ -1,0 +1,294 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Types, ???, Profit!</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script><link type="text/css" rel="stylesheet" href="css/custom.css?1437961978828" />
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0"><div class="container">
+                  <h2 id="1.+Types+2.+%3F%3F%3F+3.+Profit%21">1. Types 2. ??? 3. Profit!</h2><h4 id="Kristian+Domagala">Kristian Domagala</h4><p>Melbourne Scala User Group
+</p><p>27th July, 2015
+</p>
+                </div>
+      </div><div class="content" id="slide-1"><div class="container">
+                  <h1 id="My+journey">My journey</h1><h2 id=""></h2><ul><li>2000 &nbsp;Graduate Java developer - JSPs, Servlets
+</li><li>2002 &nbsp;EJBs!
+</li><li>2003 &nbsp;Hibernate/Spring
+</li><li>2004 &nbsp;Agile! TDD/BDD!
+</li><li>2007 &nbsp;Still looking for a better way
+</li><li>2008 &nbsp;Ruby on Rails!
+</li><li>2008 &nbsp;Scala (via Haskell)
+</li><li>2009 &nbsp;Java/Objective C
+</li><li>2010 &nbsp;Yeah, no, Scala
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-2"><div class="container">
+                  <h1 id="Pop+Quiz">Pop Quiz</h1><p>What is tags?
+</p><pre><code class="prettyprint lang-ruby">
+  tags = item.tags
+
+
+</code></pre><ol><li>Collection of <code>Tag</code> object?
+</li><li>Collection of <code>String</code>s?
+</li><li>Comma delimited <code>String</code>?
+</li></ol>
+                </div>
+      </div><div class="content" id="slide-3"><div class="container">
+                  <h1 id="All+of+the+above%21">All of the above!</h1><p>Dependent on the code path
+</p><ul><li>From DB: <code>Tag</code> collection
+</li><li>From controller: Comma-delimited <code>String</code>
+</li><li>From some other code-path: collection of <code>String</code>s
+</li></ul><p>All paths tested, but tests were setup with path assumptions
+</p>
+                </div>
+      </div><div class="content" id="slide-4"><div class="container">
+                  <h1 id="Let%E2%80%99s+write+some+code">Let’s write some code</h1><pre><code class="prettyprint lang-scala">
+case class User(firstName: String, lastName: String) {
+
+  def initials: (Char,Char) = (firstName.head, lastName.head)
+
+}
+
+val bruce = User(&quot;Bruce&quot;, &quot;Wayne&quot;)
+bruce.initials
+// ('B','W')
+
+val batman = User(&quot;Batman&quot;, &quot;&quot;)
+batman.initials
+// ...
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-5"><div class="container">
+                  <h1 id="Hmmmm">Hmmmm</h1><pre><code class="prettyprint lang-scala">java.util.NoSuchElementException: next on empty iterator
+	at scala.collection.Iterator$$anon$2.next(Iterator.scala:39)
+	at scala.collection.Iterator$$anon$2.next(Iterator.scala:37)
+	at scala.collection.IndexedSeqLike$Elements.next(IndexedSeqLike.scala:64)
+	at scala.collection.IterableLike$class.head(IterableLike.scala:91)
+	at scala.collection.immutable.StringOps.scala$collection$IndexedSeqOptimized$$super$head(StringOps.scala:31)
+	at scala.collection.IndexedSeqOptimized$class.head(IndexedSeqOptimized.scala:120)
+	at scala.collection.immutable.StringOps.head(StringOps.scala:31)
+	at user.User$.initials(User.scala:7)
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-6"><div class="container">
+                  <h1 id="What+went+wrong%3F">What went wrong?</h1><h3 id="Made+an+assumption+about+names">Made an assumption about names</h3>
+                </div>
+      </div><div class="content" id="slide-7"><div class="container">
+                  <h1 id="What+happens%E2%80%A6">What happens…</h1><h2 id="%E2%80%A6when+you+assume%3F">…when you assume?</h2><p><img alt="types"  src="main/when_you_assume.png" />
+</p><!--span class="ref">https://xkcd.com/1339/</span-->
+<span class="ref">https://xkcd.com/1339/</span>
+
+                </div>
+      </div><div class="content" id="slide-8"><div class="container">
+                  <h1 id="Maybe+it+works%3F">Maybe it works?</h1><p>Maybe all the known code-paths that lead to that point have pre-validated names?
+</p><!-- OOP, AOP -->
+
+                </div>
+      </div><div class="content" id="slide-9"><div class="container">
+                  <h1 id="Coincidence+Oriented+Programming%21">Coincidence Oriented Programming!</h1><p>What happens when someone new comes on board and adds a new code path?
+</p>
+                </div>
+      </div><div class="content" id="slide-10"><div class="container">
+                  <h1 id="Let%E2%80%99s+encode+an+assumption">Let’s encode an assumption</h1><pre><code class="prettyprint lang-scala">type Name = NonEmptyString
+
+case class User(firstName: Name, lastName: Name) {
+
+  def initials: (Char, Char) = (firstName.init, lastName.init)
+
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-11"><div class="container">
+                  <h1 id="NonEmptyString">NonEmptyString</h1><pre><code class="prettyprint lang-scala">case class NonEmptyString private(value: String) {
+  def init = value.head
+}
+
+object NonEmptyString {
+  def nonEmptyString(str: String): Option[NonEmptyString] =
+    if (str.isEmpty) None
+    else Some(NonEmptyString(str))
+
+  def nonEmptyString(head: Char,
+                     tail: String): NonEmptyString =
+    NonEmptyString(head + tail)
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-12"><div class="container">
+                  <h1 id="Let%E2%80%99s+try+it+again">Let’s try it again</h1><pre><code class="prettyprint lang-scala">type Name = NonEmptyString
+case class User(firstName: Name, lastName: Name) {
+
+  def initials: (Char, Char) = (firstName.init, lastName.init)
+
+}
+
+object User {
+
+  def create(fName: String, lName: String): Option[User] =
+    for {fn &lt;- nonEmptyString(fName)
+         ln &lt;- nonEmptyString(lName)
+    } yield User(fn, ln)
+
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-13"><div class="container">
+                  <h1 id="Profit%21">Profit!</h1><pre><code class="prettyprint lang-scala">val bruce: Option[User] = User.create(&quot;Bruce&quot;,&quot;Wayne&quot;)
+// Some(User(Bruce, Wayne))
+bruce.map(user =&gt; user.initials)
+// Some(('B','W'))
+
+val batman: Option[User] = User.create(&quot;Batman&quot;,&quot;&quot;)
+// None
+batman.map(user =&gt; user.initials)
+// None
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-14"><div class="container">
+                  <h1 id="But+wait">But wait</h1><h2 id="Surely+more+code+%21%3D+Profit%21%3F">Surely more code != Profit!?</h2><p>How much extra code really?
+</p><ul><li>Reduced tests
+</li><li>Reduced defensive programming
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-15"><div class="container">
+                  <h1 id="Just+an+extension">Just an extension</h1><p>Writing a <code>User</code> class in a typed language is an improvement over using an associative array of properties to represent a <code>User</code> in an untyped language
+</p><p>So why stop at “primitives” when modeling your types
+</p><!-- Reference to item.tags example -->
+
+                </div>
+      </div><div class="content" id="slide-16"><div class="container">
+                  <h1 id="Boring%21">Boring!</h1><h3 id="Strings+are+trivial%3B+how+does+this+help+me+in">Strings are trivial; how does this help me in</h3><h2 id="The+Real+World%3Cspan+class%3D%22sup%22%3ETM%3C%2Fspan%3E%3F">The Real World<span class="sup">TM</span>?</h2>
+                </div>
+      </div><div class="content" id="slide-17"><div class="container">
+                  <h1 id="Real+World">Real World</h1><pre><code class="prettyprint lang-scala">trait Task { def id: Id; def noteId: Id; ... }
+trait Note { def id: Id; def content: String; ... }
+
+class Database(userId: Id) {
+
+  // Need to ensure user is logged in
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Need to ensure user is logged in
+  // Need to ensure note exists and belongs to user
+  def updateNote(noteId: Id, newContent: String) = ...
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-18"><div class="container">
+                  <h1 id="Types">Types</h1><pre><code class="prettyprint lang-scala">case class User(userId: Id, pwdHash: PasswordHash)
+
+trait PasswordHash {
+  def matches(other: PasswordHash): Boolean
+}
+
+trait Password { def hash: PasswordHash }
+
+trait SessionToken
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-19"><div class="container">
+                  <h1 id="%3F%3F%3F">???</h1><pre><code class="prettyprint lang-scala">class AuthedUser private(val user: User)
+
+object AuthedUser {
+
+  def auth(usr: User, pwd: Password): Option[AuthedUser] =
+    if (pwd.hash.matches(usr.pwdHash))
+      Some(new AuthedUser(usr))
+    else
+      None
+
+  def auth(usr:User, tok: SessionToken): Option[AuthedUser] =
+    ...
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-20"><div class="container">
+                  <h1 id="Authentication+Profit%21">Authentication Profit!</h1><pre><code class="prettyprint lang-scala">class Database(au: AuthedUser) {
+
+  // Can't call unless user has been authenticated
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Again, can't call unless user has been authenticated
+  // Still need to check if note exists and is accessible
+  def updateNote(noteId: Id, newContent: String) = ...
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-21"><div class="container">
+                  <h1 id="Authorisation+Profit%21">Authorisation Profit!</h1><pre><code class="prettyprint lang-scala">
+object Database {
+  case class Task private(id: Id, noteId: Id, ...)
+  case class Note private(id: Id, content: String, ...)
+}
+
+class Database(au: AuthedUser) {
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Can only get Note from Database, which implies that:
+  //   1. Note exists
+  //   2. Note is accessible by AuthedUser
+  def updateNote(note: Note, newContent: String) = ...
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-22"><div class="container">
+                  <h1 id="Generalisation+Profit%21">Generalisation Profit!</h1><pre><code class="prettyprint lang-scala">sealed trait Ref[A] { def id: Id }
+object Database {
+  case class Task private(id: Id, note: Ref[Note])
+  case class Note private(id: Id, content: String)
+    extends Ref[Note]
+}
+class Database(au: AuthedUser) {
+  def loadTask(taskId: Id): Option[Task] = ...
+  def loadNote(noteId: Id): Option[Note] = ...
+
+  // Can only get Ref[Note] from Database (either from
+  // loadNote or via loadTask)
+  def updateNote(noteRef: Ref[Note], newContent: String) = ...
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-23"><div class="container">
+                  <h1 id="Types+are+cheap%3Cspan+class%3D%22sup%22%3E*%3C%2Fspan%3E">Types are cheap<span class="sup">*</span></h1><h6><span class="sup">*</span>Relative to the benefits they provide</h6>
+                </div>
+      </div><div class="content" id="slide-24"><div class="container">
+                  <h1 id="Types+are+cheap">Types are cheap</h1><blockquote><p>Is there a type famine that I’m not aware of?
+</p></blockquote><p>Rúnar Bjarnason
+</p><span class="ref">https://groups.google.com/d/msg/scalaz/R-YYRoqzSXk/jk_gCJxMLoIJ</span>
+
+                </div>
+      </div><div class="content" id="slide-25"><div class="container">
+                  <h1 id="More+Profit%3F">More Profit?</h1><p>Level of constraints depends on the sophistication of the type system
+</p><p>You can still rule-out a number of types of bugs and help focus your search when something does go wrong
+</p>
+                </div>
+      </div><div class="content" id="slide-26"><div class="container">
+                  <h1 id="Next+time+you+ask%E2%80%A6">Next time you ask…</h1><p><img alt="types"  src="main/types.png" />
+</p><span class="ref">https://twitter.com/KenScambler/status/621933432365432832</span>
+
+                </div>
+      </div><div class="content" id="slide-27"><div class="container">
+                  <h1 id="Thanks%21">Thanks!</h1><ul><li><span class="ref">http://dkristian.github.io/types_talk</span>
+</li><li><span class="ref">http://kristian-domagala.blogspot.com.au/2009/04/using-type-system-for-discoverability.html</span>
+</li><li><span class="ref">https://twitter.com/kdomagala</span>
+</li><li><span class="ref">https://github.com/softprops/picture-show</span></li></ul>
+                </div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
