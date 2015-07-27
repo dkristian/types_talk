@@ -50,9 +50,16 @@ h6 {
     padding-top: 0.3em;
 }
 
+img {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 ol {
     text-align: left;
     padding-top: 0.5em;
+    padding-left: 0.5em;
 }
 
 ul {
@@ -82,8 +89,12 @@ p {
     text-align: left;
 }
 
-.container {
-}
+#slide-0 .container p { text-align: center; }
+
+#slide-7 .container { text-align: center; }
+#slide-7 .container p { text-align: center; }
+#slide-26 .container { text-align: center; }
+#slide-26 .container p { text-align: center; }
 
 .center {
     text-align: center;
