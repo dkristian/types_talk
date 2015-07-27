@@ -1,11 +1,9 @@
 !SLIDE
 ## 1. Types 2. ??? 3. Profit!
 
-#### Kristian Domagala
+### Kristian Domagala
 
-Melbourne Scala User Group
-
-27th July, 2015
+Melbourne Scala User Group, 27th July, 2015
 
 !SLIDE
 # My journey
@@ -89,8 +87,6 @@ java.util.NoSuchElementException: next on empty iterator
 ## ...when you assume?
 
 ![types](main/when_you_assume.png)
-
-<!--span class="ref">https://xkcd.com/1339/</span-->
 
 <span class="ref">https://xkcd.com/1339/</span>
 
