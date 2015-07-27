@@ -1,8 +1,18 @@
 package user
 
-case class User(firstName: String, lastName: String)
+case class User(firstName: String, lastName: String) {
+
+  def initials: (Char,Char) = (firstName.head, lastName.head)
+
+}
 
 object User {
-  def initials(u: User): (Char,Char) =
-    (u.firstName.head, u.lastName.head)
+
+val bruce = User("Bruce", "Wayne")
+bruce.initials
+// ('B','W')
+
+val batman = User("Batman", "")
+batman.initials
+// ...
 }

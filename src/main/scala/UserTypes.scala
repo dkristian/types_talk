@@ -19,7 +19,11 @@ object NonEmptyString {
 import NonEmptyString.nonEmptyString
 import User.Name
 
-case class User(firstName: Name, lastName: Name)
+case class User(firstName: Name, lastName: Name) {
+
+  def initials: (Char, Char) =  (firstName.init, lastName.init)
+
+}
 
 object User {
   type Name = NonEmptyString
@@ -29,8 +33,7 @@ object User {
          ln <- nonEmptyString(lName)
     } yield User(fn, ln)
 
-  def initials(u: User): (Char, Char) =
-    (u.firstName.init, u.lastName.init)
+  def create(fName: Name, lName: Name) = User(fName, lName)
 }
 
 object Client {
@@ -38,12 +41,12 @@ import User._
 
 val bruce: Option[User] = User.create("Bruce","Wayne")
 // Some(User(Bruce, Wayne))
-bruce.map(user => initials(user))
+bruce.map(user => user.initials)
 // Some(('B','W'))
 
 val batman: Option[User] = User.create("Batman","")
 // None
-batman.map(user => initials(user))
+batman.map(user => user.initials)
 // None
 
 }

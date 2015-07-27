@@ -50,17 +50,19 @@ All paths tested, but tests were setup with path assumptions
 !SLIDE
 # Let's write some code
 ```scala
-case class User(firstName: String, lastName: String)
 
-def initials(u: User): (Char, Char) =
-  (u.firstName.head, u.lastName.head)
+case class User(firstName: String, lastName: String) {
+
+  def initials: (Char,Char) = (firstName.head, lastName.head)
+
+}
 
 val bruce = User("Bruce", "Wayne")
-initials(bruce)
+bruce.initials
 // ('B','W')
 
 val batman = User("Batman", "")
-initials(batman)
+batman.initials
 // ...
 ```
 
@@ -109,7 +111,11 @@ What happens when someone new comes on board and adds a new code path?
 ```scala
 type Name = NonEmptyString
 
-case class User(firstName: Name, lastName: Name)
+case class User(firstName: Name, lastName: Name) {
+
+  def initials: (Char, Char) = (firstName.init, lastName.init)
+
+}
 ```
 
 !SLIDE
@@ -134,7 +140,11 @@ object NonEmptyString {
 # Let's try it again
 ```scala
 type Name = NonEmptyString
-case class User(firstName: Name, lastName: Name)
+case class User(firstName: Name, lastName: Name) {
+
+  def initials: (Char, Char) = (firstName.init, lastName.init)
+
+}
 
 object User {
 
@@ -143,8 +153,6 @@ object User {
          ln <- nonEmptyString(lName)
     } yield User(fn, ln)
 
-  def initials(u: User): (Char, Char) =
-    (u.firstName.init, u.lastName.init)
 }
 ```
 
@@ -153,12 +161,12 @@ object User {
 ```scala
 val bruce: Option[User] = User.create("Bruce","Wayne")
 // Some(User(Bruce, Wayne))
-bruce.map(user => initials(user))
+bruce.map(user => user.initials)
 // Some(('B','W'))
 
 val batman: Option[User] = User.create("Batman","")
 // None
-batman.map(user => initials(user))
+batman.map(user => user.initials)
 // None
 ```
 
